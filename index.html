@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f1e8">
+<title>حمام سارة | Invitation au hammam de Sarra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#344c40; --green-deep:#23372f; --sage:#879783;
+  --gold:#b4975a; --gold-light:#e3d4ad; --cream:#f6f1e8;
+  --paper:#fffdf8; --ink:#373a32; --muted:#77766c;
+  --serif:'Cormorant Garamond',Georgia,serif; --arabic:'Amiri',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.65;overflow-x:hidden}
+body.locked{overflow:hidden}
+button,input{font:inherit}
+#intro{position:fixed;inset:0;z-index:50;display:grid;place-items:center;overflow:hidden;background:#241d17 url("./hammam-rideau.jpg") center 55%/cover no-repeat;opacity:1;visibility:visible;transition:opacity 1s ease 1.25s,visibility 0s linear 2.3s}
+#intro:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#1b171322 0%,#1b171300 42%,#1b171322 100%);pointer-events:none}
+#intro.open{opacity:0;visibility:hidden}
+.intro-screen{position:relative;z-index:1;display:block;width:100%;height:100%;padding:0;border:0;background:transparent;cursor:pointer;overflow:hidden}
+.intro-screen img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;transition:transform 2.1s cubic-bezier(.2,.65,.25,1)}
+#intro.open .intro-screen img{transform:scale(1.18)}
+.intro-screen:focus-visible{outline:3px solid #f2dfb3;outline-offset:-8px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-aspect-ratio:3/4){.intro-screen img{object-fit:cover;object-position:center}}
+#sparkles{position:fixed;inset:0;pointer-events:none;z-index:30;overflow:hidden}
+.spark{position:absolute;width:var(--s);height:var(--s);background:#f0d89b;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);filter:drop-shadow(0 0 5px #d7bd7c);animation:float var(--d) ease-in-out var(--delay) infinite}
+@keyframes float{0%,100%{opacity:0;transform:translateY(0) scale(.5)}50%{opacity:.9;transform:translateY(-35px) scale(1)}}
+#musicBtn{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:var(--green);color:#f2dfb3;font-size:22px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 6px 16px #23372f33}
+#musicBtn.show{display:flex}#musicBtn.playing{animation:spin 7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+main{max-width:620px;margin:0 auto;padding:28px 16px calc(88px + env(safe-area-inset-bottom,0px))}
+.frame{position:relative;border:1px solid var(--gold);outline:1px solid var(--gold);outline-offset:-7px;padding:38px 23px 42px;text-align:center;background:var(--paper);box-shadow:0 14px 45px #4b503b0c}
+.frame:before,.frame:after{content:"✦";position:absolute;color:var(--gold);font-size:18px;top:13px}.frame:before{left:18px}.frame:after{right:18px}
+section+section{margin-top:38px}
+.eyebrow{font-size:1rem;color:var(--sage)}
+.title{font:clamp(2.2rem,9vw,3.5rem)/1.5 var(--arabic);font-weight:700;color:var(--green);margin:8px 0}
+.arabic{font:1.7rem/1.7 var(--arabic);color:var(--green)}
+.subtitle{font-size:1.25rem;color:var(--muted);font-style:italic}
+.fr-line{display:block;direction:ltr;text-align:center;font-family:var(--serif);font-size:.78em;line-height:1.45;color:#8a795f;font-weight:400;margin-top:1px;font-style:normal}
+.fr-line.small{font-size:.72em}
+.dual-label{display:block}
+.dual-label .fr-line{font-size:.78rem;margin-top:0}
+.rsvp .lead .fr-line{margin-top:4px}
+.ornament{display:block;margin:25px auto;width:145px;color:var(--gold)}
+
+/* Styles pour le texte dynamique */
+.dynamic-container {
+  max-width: 460px;
+  margin: 0 auto;
+  text-align: center;
+  min-height: 220px;
+}
+.animated-phrase {
+  margin-bottom: 18px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.animated-phrase.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.anim-ar {
+  font: 1.4rem/1.8 var(--arabic);
+  color: var(--green);
+  font-weight: 700;
+}
+.anim-fr {
+  display: block;
+  direction: ltr;
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: #8a795f;
+  margin-top: 4px;
+}
+
+.photo{width:min(250px,75%);margin:28px auto 0;padding:6px;background:linear-gradient(135deg,var(--gold-light),var(--gold));clip-path:url(#archClip)}
+.photo .inner{aspect-ratio:4/5;clip-path:url(#archClip);background:#e9e3d5}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.event-card{margin-top:20px;padding:22px 12px;border-top:1px solid var(--gold-light);border-bottom:1px solid var(--gold-light)}
+.event-label{font-size:1rem;color:var(--sage)}
+.event-date{font:2rem var(--arabic);color:var(--green);font-weight:700}
+.event-detail{font-size:1.15rem;color:var(--muted)}
+.btn{display:inline-block;margin:16px 5px 0;padding:9px 23px;border-radius:40px;border:1px solid var(--green);background:var(--green);color:#fffdf8;text-decoration:none;cursor:pointer;font:600 1rem var(--arabic);transition:background .2s}
+.btn:hover{background:var(--green-deep)}
+.btn.secondary{background:transparent;color:var(--green)}
+.rsvp{padding:24px 17px;background:#f5f2e9;border:1px solid #e1d6bd;text-align:right}
+.rsvp h2{text-align:center;font:2rem var(--arabic);color:var(--green);margin-bottom:5px}
+.rsvp .lead{text-align:center;color:var(--muted);font-size:1.05rem;margin-bottom:20px}
+label{display:block;color:var(--green);font-weight:600;margin:14px 0 6px;text-align:right}
+input[type="text"]{width:100%;padding:12px 13px;border:1px solid #c9c4b4;background:#fffdf8;border-radius:3px;color:var(--ink)}
+input:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.choice{display:flex;align-items:center;gap:9px;padding:12px;border:1px solid #d4cbb6;background:#fffdf8;cursor:pointer;border-radius:3px}
+.choice:has(input:checked){border-color:var(--green);background:#e9eee6}
+.choice input{accent-color:var(--green);width:17px;height:17px}
+#rsvpMessage{min-height:1.6em;margin-top:12px;text-align:center;color:var(--green);font-size:1rem}
+.small-note{text-align:center;color:var(--muted);font-size:.88rem;margin-top:9px}
+.closing{font-size:1.2rem;color:var(--muted);font-style:italic}
+.sign{font:2rem var(--arabic);color:var(--gold);margin-top:6px}
+@media(max-width:390px){.frame{padding:34px 17px}.choices{grid-template-columns:1fr}.title{font-size:2.7rem}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}#sparkles{display:none}}
+</style>
+</head>
+<body class="locked">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><clipPath id="archClip" clipPathUnits="objectBoundingBox"><path d="M0.04,1 L0.04,0.43 A0.46,0.43 0 1 1 0.96,0.43 L0.96,1 Z"/></clipPath></defs></svg>
+
+<div id="intro">
+  <button class="intro-screen" id="openBtn" aria-label="اضغط للدخول — Appuyez pour entrer">
+    <img src="./hammam-rideau.jpg" alt="Rideaux de voile ouvrant sur un hammam oriental illuminé" fetchpriority="high">
+    <span class="sr-only">اضغط للدخول — Appuyez pour entrer</span>
+  </button>
+</div>
+
+<div id="sparkles" aria-hidden="true"></div>
+<audio id="music" src="music.mp3" loop preload="none"></audio>
+<button id="musicBtn" aria-label="إيقاف الموسيقى" title="الموسيقى">♫</button>
+
+<main><div class="frame">
+  <section>
+    <p class="eyebrow">لحظات من الراحة والجمال<span class="fr-line">Un instant de détente et de beauté</span></p>
+    <h1 class="title">حمام سارة<span class="fr-line">Hammam de Sarra </span></h1>
+    <p class="subtitle">أصالة تونسية · جمال · استرخاء<span class="fr-line">Tradition tunisienne · Beauté · Détente</span></p>
+  </section>
+
+  <svg class="ornament" viewBox="0 0 150 20" aria-hidden="true"><path d="M0 10H55M95 10H150" stroke="currentColor"/><path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor"/><circle cx="75" cy="10" r="2" fill="currentColor"/></svg>
+
+  <section>
+    <!-- Conteneur dynamique pour le texte animé -->
+    <div class="dynamic-container" id="dynamicText"></div>
+    
+    <!-- Photo facultative -->
+    <div class="photo" id="photoBox"><div class="inner"><img src="photo.png" alt="أجواء الحمّام التقليدي" onerror="document.getElementById('photoBox').remove()"></div></div>
+  </section>
+
+  <section class="event-card" id="event">
+    <p class="event-label">موعدنا معكم<span class="fr-line">Rendez-vous</span></p>
+    <p class="event-date" id="eventDate">الإثنين 22 مارس 2027</p><p class="fr-line" id="eventDateFr">Lundi 22 mars 2027</p>
+    <p class="event-detail" id="eventTime">من الساعة 12:00 إلى 15:00</p><p class="fr-line" id="eventTimeFr">De 12h00 à 15h00</p>
+    <p class="event-detail" id="eventVenue" style="margin-top:10px;font-weight:600;color:var(--ink)">إسباس أورينتال - Mornag</p><p class="fr-line" id="eventVenueFr">Espace Oriental - Mornag</p>
+    <p class="event-detail" id="eventAddress">مرناق، تونس</p><p class="fr-line" id="eventAddressFr">Mornag, Tunis</p>
+    <a class="btn" id="mapsBtn" href="https://maps.google.com/" target="_blank" rel="noopener">الموقع على الخريطة<span class="fr-line">Voir sur la carte</span></a>
+  </section>
+
+  <svg class="ornament" viewBox="0 0 150 20" aria-hidden="true"><path d="M0 10H55M95 10H150" stroke="currentColor"/><path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor"/><circle cx="75" cy="10" r="2" fill="currentColor"/></svg>
+
+  <section class="rsvp" id="rsvp">
+    <h2>تأكيد الحضور<span class="fr-line">Confirmation de présence</span></h2>
+    <p class="lead">يرجى تأكيد الحضور حتى نتمكّن من التحضير لهذه اللحظات الجميلة.<span class="fr-line">Merci de confirmer votre présence afin que nous puissions préparer au mieux ce joli moment.</span></p>
+    <form id="rsvpForm">
+      <label for="guestName">الاسم واللقب<span class="fr-line">Nom et prénom</span></label>
+      <input type="text" id="guestName" name="name" autocomplete="name" placeholder="اكتب اسمك ولقبك / Entrez votre nom et prénom" required>
+      <label>الرجاء اختيار الإجابة<span class="fr-line">Merci de choisir votre réponse</span></label>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="attendance" value="نعم، بكل سرور" required><span>نعم، بكل سرور<span class="fr-line">Oui, avec plaisir</span></span></label>
+        <label class="choice"><input type="radio" name="attendance" value="لا، مع الأسف" required><span>لا، مع الأسف<span class="fr-line">Non, malheureusement</span></span></label>
+      </div>
+      <button class="btn" type="submit" style="width:100%">إرسال الإجابة<span class="fr-line" style="color:#f5ead2">Envoyer ma réponse</span></button>
+      <p id="rsvpMessage" role="status" aria-live="polite"></p>
+      <p class="small-note">إجابتكم تهمّنا، شكرًا لكم!<span class="fr-line">Votre réponse compte pour nous, merci !</span></p>
+    </form>
+  </section>
+
+  <section>
+    <p class="closing">يسعدنا أن نتقاسم معكم هذه اللحظات المميّزة.<span class="fr-line">Nous serons heureux de partager ce moment précieux avec vous.</span></p>
+    <p class="sign" dir="rtl">أهلاً وسهلاً بكم<span class="fr-line">Bienvenue</span></p>
+  </section>
+</div></main>
+
+<script>
+/* Données du texte avec leurs traductions françaises synchronisées */
+const invitationLines = [
+  { ar: "أغلى الحبايب والصديقات،", fr: "Chères amies et proches," },
+  { ar: "فرحتنا ما تكملش إلا بوجودكم معانا!", fr: "Notre joie ne sera complète qu'avec votre présence !" },
+  { ar: "دعوة خاصة جداً لعيون عروستنا المزيانة سارّة في عشوية متميزة تجمعنا على الحب والفرحة: حمام سارة.", fr: "Une invitation très spéciale pour les beaux yeux de notre douce mariée Sarra, lors d'une soirée mémorable placée sous le signe de l'amour et de la fête : le hammam de Sarra." },
+  { ar: "بين بخار الماء الدافئ، ريحة الورد والفل، الزغاريد والأجواء التونسية الزمنية، خلونا نعيشوا مع بعضنا لحظات استرخاء، ضحك ولمّة ما تتنساش.", fr: "Entre vapeur d'eau chaude, senteurs de rose et de jasmin, l'ambiance traditionnelle tunisienne et les loulous, vivons ensemble des moments de détente, de rires et de partage inoubliables." },
+  { ar: "حضروا رواحكم لعشوية كلها دلال وبهجة للعروسة!", fr: "Préparez-vous pour un après-midi de chouchoutage et de bonheur pour la mariée !" }
+];
+
+/* Fonction pour afficher le texte de manière dynamique au clic sur l'ouverture */
+function startTextAnimation() {
+  const container = document.getElementById("dynamicText");
+  container.innerHTML = "";
+  
+  invitationLines.forEach((line, index) => {
+    setTimeout(() => {
+      const div = document.createElement("div");
+      div.className = "animated-phrase";
+      div.innerHTML = `<span class="anim-ar">${line.ar}</span><span class="anim-fr">${line.fr}</span>`;
+      container.appendChild(div);
+      
+      setTimeout(() => {
+        div.classList.add("visible");
+      }, 50);
+    }, index * 1200);
+  });
+}
+
+const EVENT = {
+  date: "الإثنين 22 مارس 2027",
+  time: "من الساعة 12:00 إلى 15:00",
+  venue: "إسباس أورينتال - Mornag",
+  address: "مرناق، تونس",
+  maps: "https://www.google.com/maps/search/?api=1&query=Espace+Oriental+Mornag+Tunis"
+};
+const SHEETS_ENDPOINT = "";
+
+document.getElementById("eventDate").textContent = EVENT.date;
+document.getElementById("eventTime").textContent = EVENT.time;
+document.getElementById("eventVenue").textContent = EVENT.venue;
+document.getElementById("eventAddress").textContent = EVENT.address;
+if (EVENT.maps.trim()) document.getElementById("mapsBtn").href = EVENT.maps;
+else document.getElementById("mapsBtn").href =
+  "https://www.google.com/maps/search/?api=1&query=" +
+  encodeURIComponent(EVENT.venue + " " + EVENT.address);
+
+const intro = document.getElementById("intro");
+const music = document.getElementById("music");
+const musicBtn = document.getElementById("musicBtn");
+
+document.getElementById("openBtn").addEventListener("click", () => {
+  intro.classList.add("open");
+  document.body.classList.remove("locked");
+  
+  startTextAnimation();
+
+  music.play().then(() => musicBtn.classList.add("show","playing"))
+    .catch(() => {});
+});
+
+musicBtn.addEventListener("click", () => {
+  if (music.paused) {
+    music.play().then(() => musicBtn.classList.add("playing")).catch(() => {});
+    musicBtn.setAttribute("aria-label","إيقاف الموسيقى");
+  } else {
+    music.pause();
+    musicBtn.classList.remove("playing");
+    musicBtn.setAttribute("aria-label","تشغيل الموسيقى");
+  }
+});
+
+const sparkles = document.getElementById("sparkles");
+for (let i=0;i<22;i++){
+  const s=document.createElement("span");
+  s.className="spark";
+  s.style.left=(Math.random()*100)+"%";
+  s.style.top=(8+Math.random()*92)+"%";
+  s.style.setProperty("--s",(5+Math.random()*9)+"px");
+  s.style.setProperty("--d",(5+Math.random()*7)+"s");
+  s.style.setProperty("--delay",(-Math.random()*8)+"s");
+  sparkles.appendChild(s);
+}
+
+document.getElementById("rsvpForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const message = document.getElementById("rsvpMessage");
+  const data = {
+    name: document.getElementById("guestName").value.trim(),
+    attendance: form.querySelector('input[name="attendance"]:checked')?.value || ""
+  };
+  if (!data.name || !data.attendance) {
+    message.textContent = "يرجى إدخال الاسم واختيار الإجابة.";
+    return;
+  }
+  if (!SHEETS_ENDPOINT.trim()) {
+    message.textContent = "شكرًا لكم! تم تجهيز إجابتكم. سيتم ربط النموذج بجدول Google Sheets عند إضافة رابط الإرسال.";
+    return;
+  }
+  try {
+    await fetch(SHEETS_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+      body: new URLSearchParams(data).toString()
+    });
+    message.textContent = "شكرًا على إجابتكم!";
+    form.reset();
+  } catch (err) {
+    message.textContent = "تعذّر إرسال الإجابة. يرجى المحاولة مجددًا.";
+  }
+});
+</script>
+</body>
+</html>
