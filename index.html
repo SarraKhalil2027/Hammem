@@ -211,7 +211,7 @@ const EVENT = {
   address: "مرناق، تونس",
   maps: "https://www.google.com/maps/search/?api=1&query=Espace+Oriental+Mornag+Tunis"
 };
-const SHEETS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyqmGcmrtvGb3uT3BVpO7Y0x_DIitEzM-a3DA56Ej1Hg78WgrDzzPwnY8P4YDsnzje49Q/exec";
+const SHEETS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyyyEdEUQC5zOXBikaHDioN1bsFxzGAhLcS0i-QDh1b3zslpAW8BSld8RgVKfhDUL3P/exec";
 
 document.getElementById("eventDate").textContent = EVENT.date;
 document.getElementById("eventTime").textContent = EVENT.time;
@@ -274,36 +274,62 @@ for (let i=0;i<22;i++){
 
 document.getElementById("rsvpForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const form = e.currentTarget;
   const message = document.getElementById("rsvpMessage");
+  const button = form.querySelector('button[type="submit"]');
+
   const data = {
-    name: document.getElementById("guestName").value.trim(),
-    attendance: form.querySelector('input[name="attendance"]:checked')?.value || "",
-    count: Number(document.getElementById("guestCount").value || 1)
+    nom: document.getElementById("guestName").value.trim(),
+    presence: form.querySelector('input[name="attendance"]:checked')?.value || "",
+    nombre: Number(document.getElementById("guestCount").value)
   };
-  if (!data.name || !data.attendance || !Number.isInteger(data.count) || (data.attendance === "Oui" && data.count < 1) || (data.attendance === "Non" && data.count !== 0)) {
+
+  // Vérification des données
+  if (
+    !data.nom ||
+    !data.presence ||
+    !Number.isInteger(data.nombre) ||
+    (data.presence === "Oui" && data.nombre < 1) ||
+    (data.presence === "Non" && data.nombre !== 0)
+  ) {
     message.textContent = "يرجى إدخال الاسم واختيار الإجابة وعدد الأشخاص.";
     return;
   }
-  if (!SHEETS_ENDPOINT.trim() || SHEETS_ENDPOINT.includes("COLLER_ICI")) {
-    message.textContent = "Le formulaire est prêt : ajoutez l’URL Google Apps Script pour activer l’envoi.";
+
+  if (!SHEETS_ENDPOINT) {
+    message.textContent = "Erreur : URL Google Sheets manquante.";
     return;
   }
+
+  button.disabled = true;
+  message.textContent = "جاري إرسال الإجابة...";
+
   try {
     await fetch(SHEETS_ENDPOINT, {
       method: "POST",
       mode: "no-cors",
-      headers: {"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"},
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+      },
       body: new URLSearchParams(data).toString()
     });
-    message.textContent = "شكرًا على إجابتكم!";
+
+    message.textContent = "شكرًا على إجابتكم! ❤️";
+
     form.reset();
     guestCountInput.value = "1";
     guestCountInput.min = "1";
+
   } catch (err) {
+    console.error("Erreur RSVP :", err);
     message.textContent = "تعذّر إرسال الإجابة. يرجى المحاولة مجددًا.";
+
+  } finally {
+    button.disabled = false;
   }
-});
+});  
+
 </script>
 </body>
 </html>
