@@ -177,8 +177,8 @@ input:focus-visible{outline:2px solid var(--sage);outline-offset:2px}
   </section>
 
   <section>
-    <p class="closing">يسعدنا أن نتقاسم معكم هذه اللحظات المميّزة.<span class="fr-line">Nous serons heureux de partager ce moment précieux avec vous.</span></p>
-    <p class="sign" dir="rtl">أهلاً وسهلاً بكم<span class="fr-line">Bienvenue</span></p>
+    <p class="closing">والعاقبة لكل صبيّة، تفرح وتعيش متهنيّة .<span class="fr-line">Et que chaque jeune fille puisse à son tour connaître ce bonheur.</span></p>
+    <p class="sign" dir="rtl">نستناكم تنوروني، عروستكم سارّة<span class="fr-line">Je compte sur votre présence pour illuminer cette journée</span></p>
   </section>
 </div></main>
 
@@ -303,8 +303,8 @@ document.getElementById("rsvpForm").addEventListener("submit", async (e) => {
   }
 
   button.disabled = true;
-  message.textContent = "جاري إرسال الإجابة...";
-
+  message.innerHTML = 'جاري إرسال الإجابة... <span class="inline-fr">- Envoi de votre réponse...</span>';
+  
   try {
     await fetch(SHEETS_ENDPOINT, {
       method: "POST",
@@ -315,16 +315,15 @@ document.getElementById("rsvpForm").addEventListener("submit", async (e) => {
       body: new URLSearchParams(data).toString()
     });
 
-    message.textContent = "شكرًا على إجابتكم! ❤️";
-
+    message.innerHTML = 'شكرًا على إجابتكم! ❤️ <span class="inline-fr">- Merci pour votre réponse !</span>';
+    
     form.reset();
     guestCountInput.value = "1";
     guestCountInput.min = "1";
 
   } catch (err) {
     console.error("Erreur RSVP :", err);
-    message.textContent = "تعذّر إرسال الإجابة. يرجى المحاولة مجددًا.";
-
+    message.innerHTML = 'تعذّر إرسال الإجابة. يرجى المحاولة مجددًا. <span class="inline-fr">- Impossible d’envoyer votre réponse. Veuillez réessayer.</span>';
   } finally {
     button.disabled = false;
   }
